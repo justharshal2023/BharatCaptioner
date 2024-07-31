@@ -3,3 +3,4 @@ easygoogletranslate
 wikipedia
 pillow 
 requests
+matplotlib
