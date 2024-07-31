@@ -4,3 +4,4 @@ wikipedia
 pillow 
 requests
 matplotlib
+tensorflow
