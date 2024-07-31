@@ -41,10 +41,11 @@ class_labels = [
 
 import gdown
 import os
+import tensorflow as tf
 
 # URL with the file ID
 file_id = '1-c2ly8k-mHuYo4Tjx3Kq_EU2CytAe95-'  # Replace with your file ID
-url = 'https://drive.google.com/file/d/1-c2ly8k-mHuYo4Tjx3Kq_EU2CytAe95-/view?usp=drive_link'
+url = f'https://drive.google.com/uc?id={file_id}'
 
 # Output path to save the model
 output = 'indian_monument_classifier35.h5'  # Replace with your model file name
@@ -53,13 +54,17 @@ output = 'indian_monument_classifier35.h5'  # Replace with your model file name
 if not os.path.exists(output):
     gdown.download(url, output, quiet=False)
 
-# Load your model (example using a dummy function)
+# Load your model
 def load_model():
     # Replace with code to load your actual model
-    loaded_model = tf.keras.models.load_model("indian_monument_classifier35.h5")
-    return "Model loaded"
+    loaded_model = tf.keras.models.load_model(output)
+    return loaded_model
 
-loaded_model = load_model()
+model = load_model()
+
+# Print model summary to verify
+model.summary()
+
 # Predict on a new image
 from tensorflow.keras.preprocessing import image
 import numpy as np
@@ -81,7 +86,7 @@ def identify_landmark(img):
     img_array /= 255.0
 
     # Get predictions
-    predictions = loaded_model.predict(img_array)
+    predictions = model.predict(img_array)
 
     # Get the index of the class with the highest probability
     predicted_class_index = np.argmax(predictions[0])
@@ -101,7 +106,7 @@ def generate_landmark_path(img_path):
     img_array /= 255.0
 
     # Get predictions
-    predictions = loaded_model.predict(img_array)
+    predictions = model.predict(img_array)
 
     # Get the index of the class with the highest probability
     predicted_class_index = np.argmax(predictions[0])
@@ -131,7 +136,7 @@ def generate_landmark_url(img_url):
         img_array /= 255.0
 
         # Get predictions
-        predictions = loaded_model.predict(img_array)
+        predictions = model.predict(img_array)
 
         # Get the index of the class with the highest probability
         predicted_class_index = np.argmax(predictions[0])
