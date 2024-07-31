@@ -56,6 +56,13 @@ if st.session_state.image is not None:
         "Marathi": "mr",
         "Kannada": "kn",
         "Punjabi": "pa",
+        "Assamesse":"as",
+        "Nepali":"ne",
+        "Tibetan":"bo",
+        "Odiya":"or",
+        "Sanskrit":"sa",
+        "Sindhi":"sd",
+        "Urdu":"ur",
     }
 
     lang = st.selectbox(
