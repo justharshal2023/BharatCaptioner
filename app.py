@@ -16,64 +16,43 @@ pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
 # Title of the Streamlit app
 st.title("BharatCaptioner")
 
-# Initialize session state
-if 'image' not in st.session_state:
-    st.session_state.image = None
-if 'landmark' not in st.session_state:
-    st.session_state.landmark = None
-if 'summary' not in st.session_state:
-    st.session_state.summary = None
-if 'caption' not in st.session_state:
-    st.session_state.caption = None
-if 'error' not in st.session_state:
-    st.session_state.error = None
-
 # Upload image or URL
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 url = st.text_input("Or enter image URL...")
 
+image = None
+error_message = None
+landmark = None
+summary = None
+caption = None
+
 if uploaded_file is not None:
-    st.session_state.image = Image.open(uploaded_file)
-    st.image(st.session_state.image, caption="Uploaded Image.", use_column_width=True)
-    st.session_state.landmark = None
-    st.session_state.summary = None
-    st.session_state.caption = None
-    st.session_state.error = None
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Uploaded Image.", use_column_width=True)
 
 if url:
     try:
         response = requests.get(url)
         response.raise_for_status()  # Check if the request was successful
-        st.session_state.image = Image.open(BytesIO(response.content))
-        st.image(st.session_state.image, caption="Image from URL.", use_column_width=True)
-        st.session_state.landmark = None
-        st.session_state.summary = None
-        st.session_state.caption = None
-        st.session_state.error = None
+        image = Image.open(BytesIO(response.content))
+        st.image(image, caption="Image from URL.", use_column_width=True)
     except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
-        st.session_state.image = None
-        st.session_state.landmark = None
-        st.session_state.summary = None
-        st.session_state.caption = None
-        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded. Sometimes some image URLs don't work. We suggest you upload the downloaded image instead ;)"
+        image = None
+        error_message = "Error: The provided URL is invalid or the image could not be loaded. Sometimes some image URLs don't work. We suggest you upload the downloaded image instead ;)"
 
 # Display error message if any
-if st.session_state.error:
-    st.error(st.session_state.error)
+if error_message:
+    st.error(error_message)
 
 # Process the image if available and no error
-if st.session_state.image is not None:
-    if st.session_state.caption is None:
-        st.session_state.caption = pipe(st.session_state.image)[0]['generated_text']
-    
-    st.write("**Caption:**", st.session_state.caption)
-    
-    if st.session_state.landmark is None or st.session_state.summary is None:
-        st.session_state.landmark = identify_landmark(st.session_state.image)
-        st.session_state.summary = wikipedia.summary(st.session_state.landmark)
+if image is not None:
+    caption = pipe(image)[0]['generated_text']
+    st.write("**Caption:**", caption)
 
-    st.write("**Landmark:**", st.session_state.landmark)
-    st.write("**Description:**", st.session_state.summary)
+    landmark = identify_landmark(image)
+    summary = wikipedia.summary(landmark)
+    st.write("**Landmark:**", landmark)
+    st.write("**Description:**", summary)
 
     language_options = {
         "Hindi": "hi",
@@ -99,7 +78,7 @@ if st.session_state.image is not None:
     )
     target_language = language_options[lang]
 
-    translated_caption = translator.translate(st.session_state.caption, target_language=target_language)
-    translated_summary = translator.translate(st.session_state.summary, target_language=target_language)
+    translated_caption = translator.translate(caption, target_language=target_language)
+    translated_summary = translator.translate(summary, target_language=target_language)
     st.write(f"**Translated Caption in {lang}:**", translated_caption)
     st.write(f"**Translated Description in {lang}:**", translated_summary)
