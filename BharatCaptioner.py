@@ -12,7 +12,7 @@ file_id = '16bnTms4ggmMwyYx7IBoMXsVRdzK3feQl'  # Replace with your file ID
 url = f'https://drive.google.com/uc?id={file_id}'
 
 # Output path to save the model
-output = 'indian_monument_classifier35.h5'  # Replace with your model file name
+output = 'indian_monuments_classifier_resnet50_combined.h5'  # Replace with your model file name
 
 # Download the file if it doesn't exist
 if not os.path.exists(output):
