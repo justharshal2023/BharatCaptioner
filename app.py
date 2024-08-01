@@ -14,7 +14,6 @@ translator = EasyGoogleTranslate(source_language="en", target_language="hi", tim
 # Load the Llava model and processor
 model_id = "llava-hf/llava-1.5-7b-hf"
 
-@st.cache_resource
 def load_llava_model():
     model = LlavaForConditionalGeneration.from_pretrained(
         model_id, 
@@ -67,7 +66,7 @@ if image is not None:
         {
             "role": "user",
             "content": [
-                {"type": "text", "text": "What are these?"},
+                {"type": "text", "text": "Describe this image"},
                 {"type": "image"},
             ],
         },
