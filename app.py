@@ -12,13 +12,7 @@ from transformers import AutoProcessor, LlavaForConditionalGeneration
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
 # Load the Llava model and processor
-model_id = "llava-hf/llava-1.5-7b-hf"
-model = LlavaForConditionalGeneration.from_pretrained(
-    model_id, 
-    torch_dtype=torch.float16, 
-    low_cpu_mem_usage=True, 
-).to(0)
-processor = AutoProcessor.from_pretrained(model_id)
+pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
@@ -55,21 +49,7 @@ if error_message:
 if image is not None:
     # Optimize image size
     image = image.resize((256, 256))  # Resize to 256x256 pixels
-    
-    # Use Llava model for captioning
-    conversation = [
-        {
-            "role": "user",
-            "content": [
-                {"type": "text", "text": "Describe this image"},
-                {"type": "image"},
-            ],
-        },
-    ]
-    prompt = processor.apply_chat_template(conversation, add_generation_prompt=True)
-    inputs = processor(prompt, image, return_tensors='pt').to("cuda" if torch.cuda.is_available() else "cpu", torch.float16)
-    output = model.generate(**inputs, max_new_tokens=200, do_sample=False)
-    caption = processor.decode(output[0][2:], skip_special_tokens=True)
+    caption = pipe(image)[0]['generated_text']
     st.write("**Caption:**", caption)
 
     landmark = identify_landmark(image)
