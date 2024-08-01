@@ -22,31 +22,33 @@ if 'summary' not in st.session_state:
 if 'error' not in st.session_state:
     st.session_state.error = None
 
-# Upload image or URL
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-url = st.text_input("Or enter image URL...")
-
-if uploaded_file is not None:
-    st.session_state.image = Image.open(uploaded_file)
-    st.image(st.session_state.image, caption="Uploaded Image.", use_column_width=True)
+# Function to reset session state
+def reset_state():
+    st.session_state.image = None
     st.session_state.landmark = None
     st.session_state.summary = None
     st.session_state.error = None
 
+# Upload image or URL
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"], key="uploader")
+url = st.text_input("Or enter image URL...", key="url_input")
+
+# If a new image is uploaded, reset the session state and display the new image
+if uploaded_file is not None:
+    reset_state()
+    st.session_state.image = Image.open(uploaded_file)
+    st.image(st.session_state.image, caption="Uploaded Image.", use_column_width=True)
+
+# If a new URL is entered, reset the session state and display the new image
 if url:
     try:
+        reset_state()
         response = requests.get(url)
         response.raise_for_status()  # Check if the request was successful
         st.session_state.image = Image.open(BytesIO(response.content))
         st.image(st.session_state.image, caption="Image from URL.", use_column_width=True)
-        st.session_state.landmark = None
-        st.session_state.summary = None
-        st.session_state.error = None
     except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
-        st.session_state.image = None
-        st.session_state.landmark = None
-        st.session_state.summary = None
-        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded.Sometimes some image url don't work we would suggest you to upload the downloaded image instead ;)"
+        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded. Sometimes some image URLs don't work. We suggest you upload the downloaded image instead ;)"
 
 # Display error message if any
 if st.session_state.error:
@@ -71,13 +73,13 @@ if st.session_state.image is not None:
         "Marathi": "mr",
         "Kannada": "kn",
         "Punjabi": "pa",
-        "Assamesse":"as",
-        "Nepali":"ne",
-        "Tibetan":"bo",
-        "Odiya":"or",
-        "Sanskrit":"sa",
-        "Sindhi":"sd",
-        "Urdu":"ur",
+        "Assamese": "as",
+        "Nepali": "ne",
+        "Tibetan": "bo",
+        "Odiya": "or",
+        "Sanskrit": "sa",
+        "Sindhi": "sd",
+        "Urdu": "ur",
     }
 
     lang = st.selectbox(
