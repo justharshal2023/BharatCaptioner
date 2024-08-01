@@ -11,8 +11,13 @@ from transformers import pipeline
 # Initialize EasyGoogleTranslate
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
-# Load the Llava model and processor
-pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+# # Load the Llava model and processor
+# pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+@st.cache_resource  # 👈 Add the caching decorator
+def load_model():
+    return pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+
+pipe = load_model()
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
