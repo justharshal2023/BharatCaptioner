@@ -40,10 +40,7 @@ from PIL import Image
 from io import BytesIO
 import matplotlib.pyplot as plt
 
-
 def identify_landmark(img):
-    img1 = img.copy()
-
     # Preprocess the image
     img = img.resize((224, 224))
     img_array = image.img_to_array(img)
@@ -56,8 +53,35 @@ def identify_landmark(img):
     # Get the index of the class with the highest probability
     predicted_class_index = np.argmax(predictions[0])
 
+    # Get the probability of the predicted class
+    predicted_probability = predictions[0][predicted_class_index]
+
     # Map the predicted class index to the class label
-    return class_labels[predicted_class_index]
+    predicted_class_label = class_labels[predicted_class_index]
+
+    # Print the probability of the prediction
+    print(f"Predicted Class: {predicted_class_label}, Probability: {predicted_probability:.2f}")
+
+    return predicted_class_label
+
+
+# def identify_landmark(img):
+#     img1 = img.copy()
+
+#     # Preprocess the image
+#     img = img.resize((224, 224))
+#     img_array = image.img_to_array(img)
+#     img_array = np.expand_dims(img_array, axis=0)
+#     img_array /= 255.0
+
+#     # Get predictions
+#     predictions = model.predict(img_array)
+
+#     # Get the index of the class with the highest probability
+#     predicted_class_index = np.argmax(predictions[0])
+
+#     # Map the predicted class index to the class label
+#     return class_labels[predicted_class_index]
 
 
 def generate_landmark_path(img_path):
