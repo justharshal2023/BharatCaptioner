@@ -12,7 +12,7 @@ from BharatCaptioner import identify_landmark
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
 # Title of the Streamlit app
-st.title("Indian Landmark Identifier and Describer")
+st.title("BharatCaptioner")
 
 # Upload image or URL
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
