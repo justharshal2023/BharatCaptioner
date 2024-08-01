@@ -5,9 +5,13 @@ from io import BytesIO
 import wikipedia
 from easygoogletranslate import EasyGoogleTranslate
 from BharatCaptioner import identify_landmark
+from transformers import pipeline
 
 # Initialize EasyGoogleTranslate
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
+
+# Load the BLIP image captioning pipeline
+captioner = pipeline("image-captioning", model="Salesforce/blip-image-captioning-large")
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
@@ -19,6 +23,8 @@ if 'landmark' not in st.session_state:
     st.session_state.landmark = None
 if 'summary' not in st.session_state:
     st.session_state.summary = None
+if 'caption' not in st.session_state:
+    st.session_state.caption = None
 if 'error' not in st.session_state:
     st.session_state.error = None
 
@@ -31,6 +37,7 @@ if uploaded_file is not None:
     st.image(st.session_state.image, caption="Uploaded Image.", use_column_width=True)
     st.session_state.landmark = None
     st.session_state.summary = None
+    st.session_state.caption = None
     st.session_state.error = None
 
 if url:
@@ -41,12 +48,14 @@ if url:
         st.image(st.session_state.image, caption="Image from URL.", use_column_width=True)
         st.session_state.landmark = None
         st.session_state.summary = None
+        st.session_state.caption = None
         st.session_state.error = None
     except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
         st.session_state.image = None
         st.session_state.landmark = None
         st.session_state.summary = None
-        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded.Sometimes some image url don't work we would suggest you to upload the downloaded image instead ;)"
+        st.session_state.caption = None
+        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded. Sometimes some image URLs don't work. We suggest you upload the downloaded image instead ;)"
 
 # Display error message if any
 if st.session_state.error:
@@ -54,6 +63,11 @@ if st.session_state.error:
 
 # Process the image if available and no error
 if st.session_state.image is not None:
+    if st.session_state.caption is None:
+        st.session_state.caption = captioner(st.session_state.image)[0]['generated_text']
+    
+    st.write("**Caption:**", st.session_state.caption)
+    
     if st.session_state.landmark is None or st.session_state.summary is None:
         st.session_state.landmark = identify_landmark(st.session_state.image)
         st.session_state.summary = wikipedia.summary(st.session_state.landmark)
@@ -71,13 +85,13 @@ if st.session_state.image is not None:
         "Marathi": "mr",
         "Kannada": "kn",
         "Punjabi": "pa",
-        "Assamesse":"as",
-        "Nepali":"ne",
-        "Tibetan":"bo",
-        "Odiya":"or",
-        "Sanskrit":"sa",
-        "Sindhi":"sd",
-        "Urdu":"ur",
+        "Assamese": "as",
+        "Nepali": "ne",
+        "Tibetan": "bo",
+        "Odiya": "or",
+        "Sanskrit": "sa",
+        "Sindhi": "sd",
+        "Urdu": "ur",
     }
 
     lang = st.selectbox(
@@ -85,5 +99,7 @@ if st.session_state.image is not None:
     )
     target_language = language_options[lang]
 
+    translated_caption = translator.translate(st.session_state.caption, target_language=target_language)
     translated_summary = translator.translate(st.session_state.summary, target_language=target_language)
-    st.write(f"**Translated Description in {lang}:**", translated_summary) 
+    st.write(f"**Translated Caption in {lang}:**", translated_caption)
+    st.write(f"**Translated Description in {lang}:**", translated_summary)
