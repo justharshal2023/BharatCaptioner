@@ -29,7 +29,7 @@ if url:
         image = Image.open(BytesIO(response.content))
         st.image(image, caption="Image from URL.", use_column_width=True)
     except requests.exceptions.RequestException as e:
-        st.error(f"Error loading image from URL: {e}")
+        #st.error(f"Error loading image from URL: {e}")
         print("Sometimes some url doesn't work we would suggest you to upload an image after downloading that image ;)")
 
 # If an image is uploaded or URL is provided
