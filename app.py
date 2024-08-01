@@ -52,9 +52,10 @@ if image is not None:
     caption = pipe(image)[0]['generated_text']
     st.write("**Caption:**", caption)
 
-    landmark = identify_landmark(image)
+    landmark,prob = identify_landmark(image)
     summary = wikipedia.summary(landmark)
     st.write("**Landmark:**", landmark)
+    st.write("Probability:",prob)
     st.write("**Description:**", summary)
 
     language_options = {
