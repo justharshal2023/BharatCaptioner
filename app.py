@@ -46,7 +46,7 @@ if url:
         st.session_state.image = None
         st.session_state.landmark = None
         st.session_state.summary = None
-        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded. Sometimes some image URLs don't work. We suggest you upload the downloaded image instead ;)"
+        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded.Sometimes some image url don't work we would suggest you to upload the downloaded image instead ;)"
 
 # Display error message if any
 if st.session_state.error:
@@ -71,13 +71,13 @@ if st.session_state.image is not None:
         "Marathi": "mr",
         "Kannada": "kn",
         "Punjabi": "pa",
-        "Assamesse": "as",
-        "Nepali": "ne",
-        "Tibetan": "bo",
-        "Odiya": "or",
-        "Sanskrit": "sa",
-        "Sindhi": "sd",
-        "Urdu": "ur",
+        "Assamesse":"as",
+        "Nepali":"ne",
+        "Tibetan":"bo",
+        "Odiya":"or",
+        "Sanskrit":"sa",
+        "Sindhi":"sd",
+        "Urdu":"ur",
     }
 
     lang = st.selectbox(
@@ -86,12 +86,4 @@ if st.session_state.image is not None:
     target_language = language_options[lang]
 
     translated_summary = translator.translate(st.session_state.summary, target_language=target_language)
-    st.write(f"**Translated Description in {lang}:**", translated_summary)
-
-# Add a reset button
-if st.button("Reset"):
-    st.session_state.image = None
-    st.session_state.landmark = None
-    st.session_state.summary = None
-    st.session_state.error = None
-    st.experimental_rerun()
+    st.write(f"**Translated Description in {lang}:**", translated_summary) 
