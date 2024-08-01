@@ -11,7 +11,7 @@ from transformers import pipeline
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
 # Load the BLIP image captioning pipeline
-captioner = pipeline("image-captioning", model="Salesforce/blip-image-captioning-large")
+pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
@@ -64,7 +64,7 @@ if st.session_state.error:
 # Process the image if available and no error
 if st.session_state.image is not None:
     if st.session_state.caption is None:
-        st.session_state.caption = captioner(st.session_state.image)[0]['generated_text']
+        st.session_state.caption = pipe(st.session_state.image)[0]['generated_text']
     
     st.write("**Caption:**", st.session_state.caption)
     
