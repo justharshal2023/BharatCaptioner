@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 import requests
 from io import BytesIO
 import wikipedia
@@ -12,33 +12,54 @@ translator = EasyGoogleTranslate(source_language="en", target_language="hi", tim
 # Title of the Streamlit app
 st.title("BharatCaptioner")
 
+# Initialize session state
+if 'image' not in st.session_state:
+    st.session_state.image = None
+if 'landmark' not in st.session_state:
+    st.session_state.landmark = None
+if 'summary' not in st.session_state:
+    st.session_state.summary = None
+if 'error' not in st.session_state:
+    st.session_state.error = None
+
 # Upload image or URL
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 url = st.text_input("Or enter image URL...")
 
-image = None
-
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image.", use_column_width=True)
+    st.session_state.image = Image.open(uploaded_file)
+    st.image(st.session_state.image, caption="Uploaded Image.", use_column_width=True)
+    st.session_state.landmark = None
+    st.session_state.summary = None
+    st.session_state.error = None
 
 if url:
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Raise an error for bad responses
-        image = Image.open(BytesIO(response.content))
-        st.image(image, caption="Image from URL.", use_column_width=True)
-    except requests.exceptions.RequestException as e:
-        #st.error(f"Error loading image from URL: {e}")
-        print("Sometimes some url doesn't work we would suggest you to upload an image after downloading that image ;)")
+        response.raise_for_status()  # Check if the request was successful
+        st.session_state.image = Image.open(BytesIO(response.content))
+        st.image(st.session_state.image, caption="Image from URL.", use_column_width=True)
+        st.session_state.landmark = None
+        st.session_state.summary = None
+        st.session_state.error = None
+    except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
+        st.session_state.image = None
+        st.session_state.landmark = None
+        st.session_state.summary = None
+        st.session_state.error = "Error: The provided URL is invalid or the image could not be loaded.Sometimes some image url don't work we would suggest you to upload the downloaded image instead ;)"
 
-# If an image is uploaded or URL is provided
-if image is not None:
-    landmark = identify_landmark(image)
-    summary = wikipedia.summary(landmark)
+# Display error message if any
+if st.session_state.error:
+    st.error(st.session_state.error)
 
-    st.write("**Landmark:**", landmark)
-    st.write("**Description:**", summary)
+# Process the image if available and no error
+if st.session_state.image is not None:
+    if st.session_state.landmark is None or st.session_state.summary is None:
+        st.session_state.landmark = identify_landmark(st.session_state.image)
+        st.session_state.summary = wikipedia.summary(st.session_state.landmark)
+
+    st.write("**Landmark:**", st.session_state.landmark)
+    st.write("**Description:**", st.session_state.summary)
 
     language_options = {
         "Hindi": "hi",
@@ -57,5 +78,5 @@ if image is not None:
     )
     target_language = language_options[lang]
 
-    translated_summary = translator.translate(summary, target_language=target_language)
+    translated_summary = translator.translate(st.session_state.summary, target_language=target_language)
     st.write(f"**Translated Description in {lang}:**", translated_summary)
