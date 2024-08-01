@@ -4,9 +4,7 @@ import requests
 from io import BytesIO
 import wikipedia
 from easygoogletranslate import EasyGoogleTranslate
-import matplotlib.pyplot as plt
 from BharatCaptioner import identify_landmark
-
 
 # Initialize EasyGoogleTranslate
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
@@ -25,9 +23,13 @@ if uploaded_file is not None:
     st.image(image, caption="Uploaded Image.", use_column_width=True)
 
 if url:
-    response = requests.get(url)
-    image = Image.open(BytesIO(response.content))
-    st.image(image, caption="Image from URL.", use_column_width=True)
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for bad responses
+        image = Image.open(BytesIO(response.content))
+        st.image(image, caption="Image from URL.", use_column_width=True)
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error loading image from URL: {e}")
 
 # If an image is uploaded or URL is provided
 if image is not None:
