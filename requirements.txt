@@ -8,3 +8,4 @@ tensorflow
 gdown
 transformers
 torch
+tf-keras
