@@ -6,7 +6,7 @@ import wikipedia
 from easygoogletranslate import EasyGoogleTranslate
 from BharatCaptioner import identify_landmark
 import torch
-from transformers import AutoProcessor, LlavaForConditionalGeneration
+from transformers import pipeline
 
 # Initialize EasyGoogleTranslate
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
