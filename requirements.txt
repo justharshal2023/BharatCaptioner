@@ -6,3 +6,5 @@ requests
 matplotlib
 tensorflow
 gdown
+transformers
+torch
