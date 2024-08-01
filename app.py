@@ -13,7 +13,7 @@ translator = EasyGoogleTranslate(source_language="en", target_language="hi", tim
 
 # # Load the Llava model and processor
 # pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
-@st.cache_resource  # 👈 Add the caching decorator
+@st.cache_data  # 👈 Add the caching decorator
 def load_model():
     return pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
 
