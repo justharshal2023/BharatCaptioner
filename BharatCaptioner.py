@@ -1,50 +1,14 @@
 import os
 import tensorflow as tf
 
-class_labels = [
-    "Ajanta Caves",
-    "Alai Darwaza",
-    "Basilica of Bom Jesus",
-    "Brihadisvara Temple",
-    "Charar-e-Sharief shrine",
-    "Charminar",
-    "Chhatrapati Shivaji Terminus",
-    "Chota Imambara",
-    "Ellora Caves",
-    "Fatehpur Sikri",
-    "Gateway of India",
-    "Ghats in Varanasi",
-    "Golden Temple",
-    "Hampi",
-    "Hawa Mahal",
-    "Humayun's Tomb",
-    "The India gate",
-    "Iron Pillar",
-    "Jageshwar",
-    "Jama Masjid",
-    "Jamali Kamali Tomb",
-    "Khajuraho Temple",
-    "Konark Sun Temple",
-    "Mahabodhi Temple",
-    "Meenakshi Temple",
-    "Qutb Minar",
-    "Qutb Minar Complex",
-    "The Red Fort",
-    "Sanchi",
-    "The Lotus Temple",
-    "The Mysore Palace",
-    "The Statue of Unity",
-    "The Taj Mahal",
-    "Vaishno Devi Temple",
-    "Victoria Memorial, Kolkata",
-]
+class_labels = ['The Agra Fort', 'Ajanta Caves', 'Alai Darwaza', 'The Amber Fort', 'Basilica of Bom Jesus', 'Bhangarh Fort', 'Brihadisvara Temple', 'Charar-e-Sharief shrine', 'Charminar', 'Chhatrapati Shivaji Terminus', 'Chota Imambara', 'Dal Lake', 'The Elephanta Caves', 'Ellora Caves', 'Fatehpur Sikri', 'Gateway of India', 'Ghats in Varanasi', 'Gol Gumbaz', 'Golden Temple', 'Group of Monuments at Mahabalipuram', 'Hampi', 'Hawa Mahal', "Humayun's Tomb", 'The India gate', 'Iron Pillar', 'Jagannath Temple, Puri', 'Jageshwar', 'Jama Masjid', 'Jamali Kamali Tomb', 'Jantar Mantar, Jaipur', 'Jantar Mantar, New Delhi', 'Khajuraho Temple', 'Konark Sun Temple', 'Mahabodhi Temple', 'Meenakshi Temple', 'Nalanda mahavihara', 'Parliament House, New Delhi', 'Qutb Minar', 'Qutb Minar Complex', 'Ram Mandir', 'Rani ki Vav', 'Rashtrapati Bhavan', 'The Red Fort', 'Sanchi', 'Supreme Court of India', 'Swaminarayan Akshardham (Delhi)', 'Taj Hotels', 'The Lotus Temple', 'The Mysore Palace', 'The Statue of Unity', 'The Taj Mahal', 'Vaishno Devi Temple', 'Venkateswara Temple, Tirumala', 'Victoria Memorial, Kolkata', 'Vivekananda Rock Memorial']
 
 import gdown
 import os
 import tensorflow as tf
 
 # URL with the file ID
-file_id = '1-c2ly8k-mHuYo4Tjx3Kq_EU2CytAe95-'  # Replace with your file ID
+file_id = '16bnTms4ggmMwyYx7IBoMXsVRdzK3feQl'  # Replace with your file ID
 url = f'https://drive.google.com/uc?id={file_id}'
 
 # Output path to save the model
