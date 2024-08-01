@@ -9,7 +9,7 @@ import tensorflow as tf
 
 # URL with the file ID
 #https://drive.google.com/file/d/1psuUF80mDO3EZkx2Rl9F5EkqbVHSxFqI/view?usp=sharing
-file_id = '1psuUF80mDO3EZkx2Rl9F5EkqbVHSxFqI  # Replace with your file ID
+file_id = '1psuUF80mDO3EZkx2Rl9F5EkqbVHSxFqI'  # Replace with your file ID
 url = f'https://drive.google.com/uc?id={file_id}'
 
 # Output path to save the model
