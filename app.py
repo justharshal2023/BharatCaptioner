@@ -12,7 +12,7 @@ from transformers import pipeline
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
 # # Load the BLIP model and processor
-pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
