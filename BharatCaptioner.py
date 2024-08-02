@@ -15,7 +15,7 @@ file_id = '1PXixJsrUaVcHEEC-jDlv4tHT2qrCrf5c'  # Replace with your file ID
 url = f'https://drive.google.com/uc?id={file_id}'
 
 # Output path to save the model
-output = 'LandmarkClassifierV4.h5'  # Replace with your model file name
+output = 'LandmarkClassifierV5.h5'  # Replace with your model file name
 
 # Download the file if it doesn't exist
 if not os.path.exists(output):
