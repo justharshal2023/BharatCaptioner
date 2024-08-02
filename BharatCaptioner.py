@@ -10,7 +10,8 @@ import tensorflow as tf
 # URL with the file ID
 #v3 - https://drive.google.com/file/d/1psuUF80mDO3EZkx2Rl9F5EkqbVHSxFqI/view?usp=sharing
 #v4 - https://drive.google.com/file/d/10weM6bZ9R8xVl0KxKig9WRzss4OpIa7f/view?usp=sharing
-file_id = '10weM6bZ9R8xVl0KxKig9WRzss4OpIa7f'  # Replace with your file ID
+#v5 - https://drive.google.com/file/d/1PXixJsrUaVcHEEC-jDlv4tHT2qrCrf5c/view?usp=sharing
+file_id = '1PXixJsrUaVcHEEC-jDlv4tHT2qrCrf5c'  # Replace with your file ID
 url = f'https://drive.google.com/uc?id={file_id}'
 
 # Output path to save the model
