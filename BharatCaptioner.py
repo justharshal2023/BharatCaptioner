@@ -60,10 +60,7 @@ def identify_landmark(img):
 
     # Map the predicted class index to the class label
     predicted_class_label = class_labels[predicted_class_index]
-
-    # Print the probability of the prediction
-    # print(f"Predicted Class: {predicted_class_label}, Probability: {predicted_probability:.2f}")
-
+    
     return predicted_class_label,predicted_probability
 
 
