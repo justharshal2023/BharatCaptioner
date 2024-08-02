@@ -50,6 +50,14 @@ if image is not None:
     # Optimize image size
     image = image.resize((256, 256))  # Resize to 256x256 pixels
     caption = pipe(image)[0]['generated_text']
+    cap_list = list(caption.split(" "))
+    if cap_list[0] == 'araffes':
+        cap_list.pop(0)
+        cap_list.insert(0,'people')
+    elif cap_list[0] == 'araffed':
+        cap_list.pop(0)
+        cap_list.insert(0,'an image of')
+    caption = ' '.join([str(elem) for elem in cap_list])
     st.write("**Caption:**", caption)
 
     landmark,prob = identify_landmark(image)
