@@ -57,6 +57,8 @@ if image is not None:
     elif cap_list[0] == 'araffed':
         cap_list.pop(0)
         cap_list.insert(0,'an image of')
+    elif cap_list[0] == 'arafed':
+        cap_list.pop(0)
     caption = ' '.join([str(elem) for elem in cap_list])
     st.write("**Caption:**", caption)
 
