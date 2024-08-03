@@ -8,11 +8,11 @@ from BharatCaptioner import identify_landmark
 import torch
 from transformers import pipeline
 
-# # Initialize EasyGoogleTranslate
-# translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
+# Initialize EasyGoogleTranslate
+translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
-# # # Load the BLIP model and processor
-# pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
+# # Load the BLIP model and processor
+pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
@@ -49,8 +49,7 @@ if error_message:
 if image is not None:
     # Optimize image size
     image = image.resize((256, 256))  # Resize to 256x256 pixels
-    #caption = pipe(image)[0]['generated_text']
-    caption  = 'caption'
+    caption = pipe(image)[0]['generated_text']
     cap_list = list(caption.split(" "))
     if cap_list[0] == 'araffes':
         cap_list.pop(0)
