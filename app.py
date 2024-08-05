@@ -8,8 +8,8 @@ from BharatCaptioner import identify_landmark
 import torch
 # from transformers import pipeline
 
-# # Initialize EasyGoogleTranslate
-# translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
+# Initialize EasyGoogleTranslate
+translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
 # # # Load the BLIP model and processor
 # pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
