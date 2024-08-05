@@ -26,7 +26,7 @@ st.sidebar.write("**Connect with me here**: [My LinkedIn](https://www.linkedin.c
 
 # Upload image or URL
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-url = st.text_input("Or enter image URL...")
+url = st.text_input("Or enter a valid image URL...")
 
 image = None
 error_message = None
