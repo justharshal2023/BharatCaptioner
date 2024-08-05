@@ -93,7 +93,7 @@ if image is not None:
     )
     target_language = language_options[lang]
 
-    translated_caption = translator.translate(caption, target_language=target_language)
+    #translated_caption = translator.translate(caption, target_language=target_language)
     translated_summary = translator.translate(summary, target_language=target_language)
     #st.write(f"**Translated Caption in {lang}:**", translated_caption)
     st.write(f"**Translated Description in {lang}:**", translated_summary)
