@@ -16,7 +16,16 @@ translator = EasyGoogleTranslate(source_language="en", target_language="hi", tim
 
 # Title of the Streamlit app
 st.title("BharatCaptioner")
-st.write('a tool to identify/describe Indian Landmarks in Indic Languages')
+st.write('A simple tool to identify/describe Indian Landmarks in Indic Languages')
+
+# Add your information to the sidebar
+st.sidebar.title("About the Developer")
+st.sidebar.info("""
+    **Developer**: Harshal  
+    **Contact**: harshal19052003@gmail.com  
+    **GitHub**: https://github.com/justharshal2023  
+    **LinkedIn**: https://www.linkedin.com/in/harshal-123a90250/ 
+""")
 
 # Upload image or URL
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -99,5 +108,6 @@ if image is not None:
     st.write(f"**Translated Description in {lang}:**", translated_summary)
 
 # Add a reset button
+st.write('')
 if st.button("Reset"):
     st.experimental_rerun()
