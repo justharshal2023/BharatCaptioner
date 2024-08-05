@@ -19,13 +19,10 @@ st.title("BharatCaptioner")
 st.write('A simple tool to identify/describe Indian Landmarks in Indic Languages')
 
 # Add your information to the sidebar
-st.sidebar.title("About the Developer")
-st.sidebar.info("""
-    **Developer**: Harshal  
-    **Code**: [My Github](https://github.com/justharshal2023) 
-    **Model**: [Mail me here](harshal19052003@gmail.com)
-    **Connect with me**: [My LinkedIn](https://www.linkedin.com/in/harshal-123a90250/)
-""")
+st.sidebar.title("Developed by Harshal")
+st.sidebar.write("**For the Model that i trained**: [Mail me here](harshal19052003@gmail.com)")
+st.sidebar.write("**For the Code**: [My GitHub](https://github.com/justharshal2023)")
+st.sidebar.write("**Connect with me here**: [My LinkedIn](https://www.linkedin.com/in/harshal-123a90250/)")
 
 # Upload image or URL
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
