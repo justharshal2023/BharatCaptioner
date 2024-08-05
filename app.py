@@ -22,9 +22,9 @@ st.write('A simple tool to identify/describe Indian Landmarks in Indic Languages
 st.sidebar.title("About the Developer")
 st.sidebar.info("""
     **Developer**: Harshal  
-    **Contact**: harshal19052003@gmail.com  
-    **GitHub**: https://github.com/justharshal2023  
-    **LinkedIn**: https://www.linkedin.com/in/harshal-123a90250/ 
+    **For Code**: [My Github](https://github.com/justharshal2023) 
+    **For the model**: [Mail me here](harshal19052003@gmail.com)
+    **Connect with me**: [My LinkedIn](https://www.linkedin.com/in/harshal-123a90250/)
 """)
 
 # Upload image or URL
