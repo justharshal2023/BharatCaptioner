@@ -83,66 +83,66 @@ def identify_landmark(img):
 #     return class_labels[predicted_class_index]
 
 
-def generate_landmark_path(img_path):
-    img = image.load_img(img_path, target_size=(224, 224))
-    img1 = img.copy()
+# def generate_landmark_path(img_path):
+#     img = image.load_img(img_path, target_size=(224, 224))
+#     img1 = img.copy()
 
-    # Preprocess the image
-    img = img.resize((224, 224))
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array /= 255.0
+#     # Preprocess the image
+#     img = img.resize((224, 224))
+#     img_array = image.img_to_array(img)
+#     img_array = np.expand_dims(img_array, axis=0)
+#     img_array /= 255.0
 
-    # Get predictions
-    predictions = model.predict(img_array)
+#     # Get predictions
+#     predictions = model.predict(img_array)
 
-    # Get the index of the class with the highest probability
-    predicted_class_index = np.argmax(predictions[0])
+#     # Get the index of the class with the highest probability
+#     predicted_class_index = np.argmax(predictions[0])
 
-    # Map the predicted class index to the class label
-    plt.imshow(img1)
-    plt.axis("off")
-    plt.title(class_labels[predicted_class_index])
-    plt.show()
-    return wikipedia.summary(class_labels[predicted_class_index])
+#     # Map the predicted class index to the class label
+#     plt.imshow(img1)
+#     plt.axis("off")
+#     plt.title(class_labels[predicted_class_index])
+#     plt.show()
+#     return wikipedia.summary(class_labels[predicted_class_index])
 
 
-def generate_landmark_url(img_url):
-    try:
-        # Download the image from the URL
-        response = requests.get(img_url)
-        response.raise_for_status()  # Check if the request was successful
+# def generate_landmark_url(img_url):
+#     try:
+#         # Download the image from the URL
+#         response = requests.get(img_url)
+#         response.raise_for_status()  # Check if the request was successful
 
-        # Open the image
-        img = Image.open(BytesIO(response.content))
-        img1 = img.copy()
+#         # Open the image
+#         img = Image.open(BytesIO(response.content))
+#         img1 = img.copy()
 
-        # Preprocess the image
-        img = img.resize((224, 224))
-        img_array = image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array /= 255.0
+#         # Preprocess the image
+#         img = img.resize((224, 224))
+#         img_array = image.img_to_array(img)
+#         img_array = np.expand_dims(img_array, axis=0)
+#         img_array /= 255.0
 
-        # Get predictions
-        predictions = model.predict(img_array)
+#         # Get predictions
+#         predictions = model.predict(img_array)
 
-        # Get the index of the class with the highest probability
-        predicted_class_index = np.argmax(predictions[0])
+#         # Get the index of the class with the highest probability
+#         predicted_class_index = np.argmax(predictions[0])
 
-        # Map the predicted class index to the class label
-        plt.imshow(img1)
-        plt.axis("off")
-        plt.title(class_labels[predicted_class_index])
-        plt.show()
+#         # Map the predicted class index to the class label
+#         plt.imshow(img1)
+#         plt.axis("off")
+#         plt.title(class_labels[predicted_class_index])
+#         plt.show()
 
-        return wikipedia.summary(class_labels[predicted_class_index])
+#         return wikipedia.summary(class_labels[predicted_class_index])
 
-    except requests.exceptions.RequestException as e:
-        print(f"Error downloading the image: {e}")
-        return "Invalid image URL."
-    except IOError as e:
-        print(f"Error opening the image: {e}")
-        return "Invalid image file."
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return "An error occurred while processing the image."
+#     except requests.exceptions.RequestException as e:
+#         print(f"Error downloading the image: {e}")
+#         return "Invalid image URL."
+#     except IOError as e:
+#         print(f"Error opening the image: {e}")
+#         return "Invalid image file."
+#     except Exception as e:
+#         print(f"An error occurred: {e}")
+#         return "An error occurred while processing the image."
