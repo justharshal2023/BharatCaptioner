@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, UnidentifiedImageError, ExifTags
 import requests
 from io import BytesIO
 import wikipedia
@@ -34,8 +34,27 @@ landmark = None
 summary = None
 caption = None
 
+def correct_image_orientation(img):
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+        exif = img._getexif()
+        if exif is not None:
+            orientation = exif[orientation]
+            if orientation == 3:
+                img = img.rotate(180, expand=True)
+            elif orientation == 6:
+                img = img.rotate(270, expand=True)
+            elif orientation == 8:
+                img = img.rotate(90, expand=True)
+    except (AttributeError, KeyError, IndexError):
+        pass
+    return img
+
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
+    image = correct_image_orientation(image)
     st.image(image, caption="Uploaded Image.", use_column_width=True)
 
 if url:
@@ -43,6 +62,7 @@ if url:
         response = requests.get(url)
         response.raise_for_status()  # Check if the request was successful
         image = Image.open(BytesIO(response.content))
+        image = correct_image_orientation(image)
         st.image(image, caption="Image from URL.", use_column_width=True)
     except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
         image = None
