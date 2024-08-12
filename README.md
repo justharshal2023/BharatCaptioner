@@ -36,7 +36,7 @@ You can try out BharatCaptioner [here](https://btjk5ajztxtrzxo9unbdko.streamlit.
 
 ## Contact
 
-For any queries or feedback, feel free to reach out to me at [harshal8587943524@gmail.com](mailto:harshal8587943524@gmail.com).
+For any queries or feedback, feel free to reach out to me at [harshal8587943524@gmail.com](mailto:harshal19052003@gmail.com).
 
 ## Acknowledgments
 
