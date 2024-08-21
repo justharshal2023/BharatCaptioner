@@ -44,9 +44,13 @@ import matplotlib.pyplot as plt
 
 def identify_landmark(img):
     # Preprocess the image
-    img = img.resize((224, 224))
-    img_array = image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
+    # img = img.resize((224, 224))
+    # img_array = image.img_to_array(img)
+    # img_array = np.expand_dims(img_array, axis=0)
+    img = img.resize((224, 224))  # Resize as per your model input size
+    img_array = np.array(img)
+    img_array = img_array / 255.0  # Normalize if required
+    img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
     img_array /= 255.0
 
     # Get predictions
