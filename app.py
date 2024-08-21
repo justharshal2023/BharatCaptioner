@@ -75,7 +75,7 @@ if error_message:
 # Process the image if available and no error
 if image is not None:
     # Optimize image size
-    image = image.resize((256, 256))  # Resize to 256x256 pixels
+    #image = image.resize((256, 256))  # Resize to 256x256 pixels
     # caption = pipe(image)[0]['generated_text']
     # cap_list = list(caption.split(" "))
     # if cap_list[0] == 'araffes':
