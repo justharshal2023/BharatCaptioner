@@ -19,7 +19,7 @@ st.title("BharatCaptioner")
 st.write('A simple tool to identify/describe Indian Landmarks in Indic Languages')
 
 # Add your information to the sidebar
-st.sidebar.title("Developed by Harshal")
+st.sidebar.title("Developed by Harshal and Harsh Pandey")
 st.sidebar.write("**For the Model that i trained**: [Mail me here](mailto:harshal19052003@gmail.com)")
 st.sidebar.write("**For the Code**: [My GitHub Repo](https://github.com/justharshal2023/BharatCaptioner)")
 st.sidebar.write("**Connect with me here**: [My LinkedIn](https://www.linkedin.com/in/harshal-123a90250/)")
