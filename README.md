@@ -4,7 +4,7 @@ BharatCaptioner is an AI-powered application designed to identify Indian landmar
 
 ## Live Link
 
-You can try out BharatCaptioner [here](https://btjk5ajztxtrzxo9unbdko.streamlit.app/).
+You can try out BharatCaptioner [here](https://huggingface.co/spaces/justharshal/IndianLandmarkClassifier).
 
 ## Features
 
