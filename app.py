@@ -1,3 +1,5 @@
+import os
+import json
 import streamlit as st
 from PIL import Image, UnidentifiedImageError, ExifTags
 import requests
@@ -5,26 +7,39 @@ from io import BytesIO
 import wikipedia
 from easygoogletranslate import EasyGoogleTranslate
 from BharatCaptioner import identify_landmark
-import torch
-# from transformers import pipeline
+from groq import Groq
+import hashlib
 
 # Initialize EasyGoogleTranslate
 translator = EasyGoogleTranslate(source_language="en", target_language="hi", timeout=10)
 
-# # # Load the BLIP model and processor
-# pipe = pipeline("image-to-text", model="Salesforce/blip-image-captioning-large")
+# Load configuration for Groq API key
+working_dir = os.path.dirname(os.path.abspath(__file__))
+config_data = json.load(open(f"{working_dir}/config.json"))
+GROQ_API_KEY = config_data["GROQ_API_KEY"]
+os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+
+client = Groq()
 
 # Title of the Streamlit app
-st.title("BharatCaptioner")
-st.write('A simple tool to identify/describe Indian Landmarks in Indic Languages')
+st.title("BharatCaptioner with Conversational Chatbot")
+st.write(
+    "A tool to identify/describe Indian Landmarks in Indic Languages and chat about the image."
+)
 
-# Add your information to the sidebar
+# Sidebar details
 st.sidebar.title("Developed by Harshal and Harsh Pandey")
-st.sidebar.write("**For the Model that i trained**: [Mail me here](mailto:harshal19052003@gmail.com)")
-st.sidebar.write("**For the Code**: [My GitHub Repo](https://github.com/justharshal2023/BharatCaptioner)")
-st.sidebar.write("**Connect with me here**: [My LinkedIn](https://www.linkedin.com/in/harshal-123a90250/)")
+st.sidebar.write(
+    "**For the Model that I trained**: [Mail me here](mailto:harshal19052003@gmail.com)"
+)
+st.sidebar.write(
+    "**For the Code**: [GitHub Repo](https://github.com/justharshal2023/BharatCaptioner)"
+)
+st.sidebar.write(
+    "**Connect with me**: [LinkedIn](https://www.linkedin.com/in/harshal-123a90250/)"
+)
 
-# Upload image or URL
+# Image upload or URL input
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 url = st.text_input("Or enter a valid image URL...")
 
@@ -34,10 +49,12 @@ landmark = None
 summary = None
 caption = None
 
+
+# Function to correct image orientation
 def correct_image_orientation(img):
     try:
         for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation] == 'Orientation':
+            if ExifTags.TAGS[orientation] == "Orientation":
                 break
         exif = img._getexif()
         if exif is not None:
@@ -52,79 +69,115 @@ def correct_image_orientation(img):
         pass
     return img
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    image = correct_image_orientation(image)
-    st.image(image, caption="Uploaded Image.", use_column_width=True)
 
-if url:
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Check if the request was successful
-        image = Image.open(BytesIO(response.content))
+# Function to get a unique hash for the image
+def get_image_hash(image):
+    img_bytes = image.tobytes()
+    return hashlib.md5(img_bytes).hexdigest()
+
+
+# Check if new image or URL is uploaded and reset the chat history
+def reset_chat_if_new_image():
+    if "last_uploaded_hash" not in st.session_state:
+        st.session_state["last_uploaded_hash"] = None
+
+    # Process the new image or URL
+    if uploaded_file:
+        image = Image.open(uploaded_file)
         image = correct_image_orientation(image)
-        st.image(image, caption="Image from URL.", use_column_width=True)
-    except (requests.exceptions.RequestException, UnidentifiedImageError) as e:
+        new_image_hash = get_image_hash(image)
+    elif url:
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            image = Image.open(BytesIO(response.content))
+            image = correct_image_orientation(image)
+            new_image_hash = get_image_hash(image)
+        except (requests.exceptions.RequestException, UnidentifiedImageError):
+            image = None
+            new_image_hash = None
+            error_message = (
+                "Error: The provided URL is invalid or the image could not be loaded."
+            )
+            st.error(error_message)
+    else:
         image = None
-        error_message = "Error: The provided URL is invalid or the image could not be loaded. Sometimes some image URLs don't work. We suggest you upload the downloaded image instead ;)"
+        new_image_hash = None
 
-# Display error message if any
-if error_message:
-    st.error(error_message)
+    # If the image is new, reset the chat and session state
+    if new_image_hash and new_image_hash != st.session_state["last_uploaded_hash"]:
+        st.session_state.clear()
+        st.session_state["last_uploaded_hash"] = new_image_hash
+        st.experimental_rerun()
 
-# Process the image if available and no error
+    return image
+
+
+# Call the reset function to check for new images or URL
+image = reset_chat_if_new_image()
+
+# If an image is provided
 if image is not None:
-    # Optimize image size
-    image = image.resize((256, 256))  # Resize to 256x256 pixels
-    # caption = pipe(image)[0]['generated_text']
-    # cap_list = list(caption.split(" "))
-    # if cap_list[0] == 'araffes':
-    #     cap_list.pop(0)
-    #     cap_list.insert(0,'people')
-    # elif cap_list[0] == 'araffed':
-    #     cap_list.pop(0)
-    #     cap_list.insert(0,'an image of')
-    # elif cap_list[0] == 'arafed':
-    #     cap_list.pop(0)
-    # caption = ' '.join([str(elem) for elem in cap_list])
-    # st.write("**Caption:**", caption)
+    # Resize image for processing
+    image = image.resize((256, 256))
 
-    landmark,prob = identify_landmark(image)
-    summary = wikipedia.summary(landmark)
-    st.write("**Landmark:**", landmark)
-    st.write("Probability:",prob)
-    st.write("**Description:**", summary)
+    # Identify the landmark using BharatCaptioner
+    landmark, prob = identify_landmark(image)
+    summary = wikipedia.summary(landmark, sentences=3)  # Shortened summary
+    st.write(f"**Landmark Identified:** {landmark} (Confidence: {prob:.2f})")
 
-    language_options = {
-        "Hindi": "hi",
-        "Bengali": "bn",
-        "Telugu": "te",
-        "Tamil": "ta",
-        "Malayalam": "ml",
-        "Gujarati": "gu",
-        "Marathi": "mr",
-        "Kannada": "kn",
-        "Punjabi": "pa",
-        "Assamese": "as",
-        "Nepali": "ne",
-        "Tibetan": "bo",
-        "Odiya": "or",
-        "Sanskrit": "sa",
-        "Sindhi": "sd",
-        "Urdu": "ur",
-    }
+    # Display image and landmark name in the sidebar
+    with st.sidebar:
+        st.image(image, caption="Current Image", use_column_width=True)
+        st.write(f"**Landmark:** {landmark}")
 
-    lang = st.selectbox(
-        "Select language for translation:", list(language_options.keys())
-    )
-    target_language = language_options[lang]
+    # Chatbot functionality
+    st.write("### Chat with the Chatbot about the Image")
+    caption = f"The landmark in the image is {landmark}. {summary}"
 
-    #translated_caption = translator.translate(caption, target_language=target_language)
-    translated_summary = translator.translate(summary, target_language=target_language)
-    #st.write(f"**Translated Caption in {lang}:**", translated_caption)
-    st.write(f"**Translated Description in {lang}:**", translated_summary)
+    # Initialize chat history in session state if not present
+    if "chat_history" not in st.session_state:
+        st.session_state["chat_history"] = []
 
-# Add a reset button
-st.write('')
-if st.button("Reset"):
-    st.experimental_rerun()
+    # Chatbot introduction message with bold text for landmark and question
+    if not st.session_state.get("chatbot_started"):
+        chatbot_intro = f"Hello! I see the image is of **{landmark}**. {summary} **Would you like to know more** about this landmark?"
+        st.session_state["chat_history"].append(
+            {"role": "assistant", "content": chatbot_intro}
+        )
+        st.session_state["chatbot_started"] = True
+
+    # Display chat history
+    for message in st.session_state.chat_history:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # User input
+    user_prompt = st.chat_input("Ask the Chatbot about the image...")
+
+    if user_prompt:
+        st.chat_message("user").markdown(user_prompt)
+        st.session_state.chat_history.append({"role": "user", "content": user_prompt})
+
+        # Send the user's message to the LLaMA chatbot
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a helpful image conversational assistant. "
+                + f"The caption of the image is: {caption}",
+            },
+            *st.session_state.chat_history,
+        ]
+
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant", messages=messages
+        )
+
+        assistant_response = response.choices[0].message.content
+        st.session_state.chat_history.append(
+            {"role": "assistant", "content": assistant_response}
+        )
+
+        # Display chatbot response
+        with st.chat_message("assistant"):
+            st.markdown(assistant_response)
